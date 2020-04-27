@@ -51,7 +51,6 @@ const getGameById = (id) => {
                     }else{
                         reject({error: "ID not found in database"});
                     }
-                    console.log(`This is the result: ${result}`);
                     client.close();
                 }catch(err){
                     reject({error: "ID must be in ObjectID format"});
@@ -73,8 +72,11 @@ const getGameByTitle = (title) => {
                 const collection = db.collection(colName);
                 try{
                     const result = await collection.findOne({title});
-                    resolve(result);
-                    console.log(result);
+                    if(result){
+                        resolve(result);
+                    }else{
+                        reject({error: "Title not found in database"})
+                    }
                     client.close();
                 }catch(err){
                     reject(err);
