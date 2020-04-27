@@ -34,7 +34,29 @@ const getGames = () => {
     });
     return myPromise;
 };
-const getGameById = (id) => {};
+const getGameById = (id) => {
+    const myPromise = new Promise((resolve, reject) =>{
+        MongoClient.connnect(url, settings, function(err, client) {
+            if(err){
+                reject(err);
+            }else{
+                console.log("Connected to DB server for READ");
+                const db = client.db(dbName);
+                const collection = db.collection(colName);
+                try{
+                    const _id = new ObjectID(id);
+                    const result = await collection.findOne({_id});
+                    resolve(result);
+                    console.log(result);
+                    client.close();
+                }catch(err){
+                    reject(err);
+                }
+            }
+        });
+    });
+    return myPromise;
+};
 const getGameByTitle = (title) => {};
 
 //CREATE function
@@ -50,5 +72,6 @@ const updateGameValues = (id, videoGame) => {};
 const deleteGame = (id) => {};
 
 module.exports = {
-    getGames
+    getGames,
+    getGameById
 }
