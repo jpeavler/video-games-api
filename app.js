@@ -8,7 +8,7 @@ const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const videoGamesRouter = require('./routes/api/video_games');
+const videoGamesRouter = require('./routes/api/video-games');
 
 var app = express();
 
@@ -25,7 +25,7 @@ app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api/video_games', videoGamesRouter);
+app.use('/api/video-games', videoGamesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
