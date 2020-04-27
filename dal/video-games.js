@@ -46,12 +46,12 @@ const getGameById = (id) => {
                 try{
                     const _id = new ObjectID(id);
                     const result = await collection.findOne({_id});
-                    if(data.lastErrorObject.n > 0) {
+                    if(result){
                         resolve(result);
                     }else{
-                        resolve({error: "ID doesn't exist in database"});
+                        reject({error: "ID not found in database"});
                     }
-                    console.log(result);
+                    console.log(`This is the result: ${result}`);
                     client.close();
                 }catch(err){
                     reject({error: "ID must be in ObjectID format"});
