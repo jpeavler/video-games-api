@@ -60,7 +60,28 @@ const getGameById = (id) => {
 const getGameByTitle = (title) => {};
 
 //CREATE function
-const addGame = (videoGame) => {};
+const addGame = (videoGame) => {
+    const myPromise = new Promise((resolve, reject) => {
+        MongoClient.connect(url, settings, function(err, client) {
+            if(err){
+                reject(err);
+            }else{
+                console.log("Connected to DB server for CREATE");
+                const db = client.db(dbName);
+                const collection = db.collection(colName);
+                collection.insertOne(videoGame, (err, result) => {
+                    if(err){
+                        reject(err);
+                    } else{
+                        resolve(result.ops[0]);
+                        client.close;
+                    }
+                })
+            }
+        })
+    });
+    return myPromise;
+};
 
 //PUT function
 const updateGame = (id, videoGame) => {};
@@ -73,5 +94,6 @@ const deleteGame = (id) => {};
 
 module.exports = {
     getGames,
-    getGameById
+    getGameById,
+    addGame
 }
