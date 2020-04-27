@@ -5,6 +5,7 @@ const {
     getGameById,
     getGameByTitle,
     addGame,
+    updateGame,
     deleteGame
 } = require('../../dal/video-games')
 
@@ -64,6 +65,20 @@ router.post('/', async function(req, res) {
         }
     }
 });
+//Put: Upsert a Video Game
+router.put('/:id', async function(req, res) {
+    try{
+        const game = await updateGame(req.params.id, req.body);
+        res.send(game);
+    }catch(err){
+        if(err.error){
+            res.status(400).send(err);
+        }else{
+            console.log(err);
+            res.send(500, 'Internal Server Issue, check logs');
+        }
+    }
+})
 //Delete a Video Game by id.
 router.delete('/:id', async function(req, res) {
     try{
