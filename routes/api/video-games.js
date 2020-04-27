@@ -4,7 +4,8 @@ const {
     getGames,
     getGameById,
     getGameByTitle,
-    addGame
+    addGame,
+    deleteGame
 } = require('../../dal/video-games')
 
 //GET Video Game Collection Listing
@@ -32,7 +33,7 @@ router.get('/:id', async function(req, res) {
 
     }
 });
-//Get a Video Game By title. Not RESTful.
+//Get a Video Game By title. Not completely RESTful.
 router.get('/title/:title', async function(req, res) {
     try{
         const gameName = req.params.title.replace(/_/g, " ");
@@ -49,7 +50,7 @@ router.get('/title/:title', async function(req, res) {
 
     }
 });
-//Post a Video Game By title.
+//Post a Video Game
 router.post('/', async function(req, res) {
     try{
         const game = await addGame(req.body);
@@ -62,6 +63,20 @@ router.post('/', async function(req, res) {
             res.send(500, 'Internal Server Issue, check logs');
         }
     }
-})
+});
+//Delete a Video Game by id.
+router.delete('/:id', async function(req, res) {
+    try{
+        const data = await deleteGame(req.params.id);
+        res.send(data);
+    }catch(err){
+        if(err.error){
+            res.status(400).send(err);
+        }else{
+            console.log(err);
+            res.status(500).send('Internal Server Issue, check logs');
+        }
+    }
+});
 
 module.exports = router;
