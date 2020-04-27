@@ -36,7 +36,7 @@ const getGames = () => {
 };
 const getGameById = (id) => {
     const myPromise = new Promise((resolve, reject) =>{
-        MongoClient.connnect(url, settings, async function(err, client) {
+        MongoClient.connect(url, settings, async function(err, client) {
             if(err){
                 reject(err);
             }else{
