@@ -3,7 +3,8 @@ var router = express.Router();
 const {
     getGames,
     getGameById,
-    getGameByTitle
+    getGameByTitle,
+    addGame
 } = require('../../dal/video-games')
 
 //GET Video Game Collection Listing
@@ -48,5 +49,19 @@ router.get('/title/:title', async function(req, res) {
 
     }
 });
+//Post a Video Game By title.
+router.post('/', async function(req, res) {
+    try{
+        const game = await addGame(req.body);
+        res.send(game);
+    }catch(err){
+        if(err.error){
+            res.status(400).send(err);
+        }else{
+            console.log(err);
+            res.send(500, 'Internal Server Issue, check logs');
+        }
+    }
+})
 
 module.exports = router;
