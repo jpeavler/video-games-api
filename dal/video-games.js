@@ -40,7 +40,7 @@ const getGameById = (id) => {
             if(err){
                 reject(err);
             }else{
-                console.log("Connected to DB server for READ");
+                console.log("Connected to DB server for READ by ID");
                 const db = client.db(dbName);
                 const collection = db.collection(colName);
                 try{
@@ -57,7 +57,28 @@ const getGameById = (id) => {
     });
     return myPromise;
 };
-const getGameByTitle = (title) => {};
+const getGameByTitle = (title) => {
+    const myPromise = new Promise((resolve, reject) => {
+        MongoClient.connect(url, settings, function(err, client) {
+            if(err){
+                reject(err);
+            }else{
+                console.log("Connected to DB server for READ by Title");
+                const db = client.db(dbName);
+                const collection = db.collection(colName);
+                try{
+                    const result = await collection.findOne({title});
+                    resolve(result);
+                    console.log(result);
+                    client.close();
+                }catch(err){
+                    reject(err);
+                }
+            }
+        });
+    });
+    return myPromise;
+};
 
 //CREATE function
 const addGame = (videoGame) => {
@@ -111,7 +132,46 @@ const updateGame = (id, videoGame) => {
 };
 
 //UPDATE: PATCH function
-const updateGameValues = (id, videoGame) => {};
+const updateGameValues = (id, videoGame) => {
+    const myPromise = new Promise((resolve, reject) => {
+        MongoClient.connect(url, settings, async function(er, client) {
+            if(err){
+                reject(err);
+            }else{
+                console.log("Connected to DB server for UPDATE: PATCH");
+                const db = client.db(dbName);
+                const collection = db.collection(colName);
+                try{
+                    const _id = new ObjectID(id);
+                    collection.updateOne({_id},
+                        {$set: {...videoGame} },
+                        function (err, data) {
+                            if(err){
+                                reject(err);
+                            }else{
+                                if(data.result.n > 0){
+                                    collection.find({_id}).toArray(
+                                        function(err, docs){
+                                            if(err){
+                                                reject(err);
+                                            }else{
+                                                resolve(docs[0]);
+                                            }
+                                        }
+                                    )
+                                }else{
+                                    resolve({error: "Nothing happened"})
+                                }
+                            }
+                        });
+                }catch(err){
+                    reject({error: "ID has to be in ObjectID format"})
+                }
+            }
+        });
+    });
+    return myPromise;
+};
 
 //DELETE function
 const deleteGame = (id) => {
@@ -132,12 +192,12 @@ const deleteGame = (id) => {
                             if(data.lastErrorObject.n > 0) {
                                 resolve(data.value);
                             }else{
-                                resolve({error: "ID doesn't exist in database"})
+                                resolve({error: "ID doesn't exist in database"});
                             }
                         }
                     });
                 }catch(err){
-                    reject({ error: "ID has to be in ObjectID format"})
+                    reject({ error: "ID has to be in ObjectID format"});
                 }
             }
         });
@@ -148,7 +208,9 @@ const deleteGame = (id) => {
 module.exports = {
     getGames,
     getGameById,
+    getGameByTitle,
     addGame,
     updateGame,
+    updateGameValues,
     deleteGame
 }
