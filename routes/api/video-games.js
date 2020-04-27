@@ -6,6 +6,7 @@ const {
     getGameByTitle,
     addGame,
     updateGame,
+    updateGameValues,
     deleteGame
 } = require('../../dal/video-games')
 
@@ -69,6 +70,19 @@ router.post('/', async function(req, res) {
 router.put('/:id', async function(req, res) {
     try{
         const game = await updateGame(req.params.id, req.body);
+        res.send(game);
+    }catch(err){
+        if(err.error){
+            res.status(400).send(err);
+        }else{
+            console.log(err);
+            res.send(500, 'Internal Server Issue, check logs');
+        }
+    }
+});
+router.patch('/:id', async function(req, res) {
+    try{
+        const game = await updateGameValues(req.params.id, req.body);
         res.send(game);
     }catch(err){
         if(err.error){
