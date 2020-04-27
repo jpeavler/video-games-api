@@ -12,7 +12,7 @@ const colName = 'video_games';
 //READ functions
 const getGames = () => {
     const myPromise = new Promise((resolve, reject) =>{
-        MongoClient.connnect(url, settings, function(err, client) {
+        MongoClient.connect(url, settings, function(err, client) {
             if(err){
                 reject(err);
             }else{
@@ -36,7 +36,7 @@ const getGames = () => {
 };
 const getGameById = (id) => {
     const myPromise = new Promise((resolve, reject) =>{
-        MongoClient.connnect(url, settings, function(err, client) {
+        MongoClient.connnect(url, settings, async function(err, client) {
             if(err){
                 reject(err);
             }else{
@@ -57,9 +57,10 @@ const getGameById = (id) => {
     });
     return myPromise;
 };
+
 const getGameByTitle = (title) => {
     const myPromise = new Promise((resolve, reject) => {
-        MongoClient.connect(url, settings, function(err, client) {
+        MongoClient.connect(url, settings, async function(err, client) {
             if(err){
                 reject(err);
             }else{
