@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const {
     getGames,
-    getGameById
+    getGameById,
+    getGameByTitle
 } = require('../../dal/video-games')
 
 //GET Video Game Collection Listing
@@ -24,6 +25,18 @@ router.get('/:id', async function(req, res) {
         console.log(err);
         res.send(500, 'Internal Server Issue, check logs');
     }
-})
+});
+//Get a Video Game By title. Not RESTful.
+router.get('/title/:title', async function(req, res) {
+    try{
+        const gameName = req.params.title.replace(/_/g, " ");
+        console.log(gameName);
+        const game = await getGameByTitle(gameName);
+        res.send(game);
+    }catch(err){
+        console.log(err);
+        res.send(500, 'Internal Server Issue, check logs');
+    }
+});
 
 module.exports = router;
