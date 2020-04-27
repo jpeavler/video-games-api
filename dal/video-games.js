@@ -46,11 +46,15 @@ const getGameById = (id) => {
                 try{
                     const _id = new ObjectID(id);
                     const result = await collection.findOne({_id});
-                    resolve(result);
+                    if(data.lastErrorObject.n > 0) {
+                        resolve(result);
+                    }else{
+                        resolve({error: "ID doesn't exist in database"});
+                    }
                     console.log(result);
                     client.close();
                 }catch(err){
-                    reject(err);
+                    reject({error: "ID must be in ObjectID format"});
                 }
             }
         });
@@ -135,7 +139,7 @@ const updateGame = (id, videoGame) => {
 //UPDATE: PATCH function
 const updateGameValues = (id, videoGame) => {
     const myPromise = new Promise((resolve, reject) => {
-        MongoClient.connect(url, settings, async function(er, client) {
+        MongoClient.connect(url, settings, async function(err, client) {
             if(err){
                 reject(err);
             }else{
