@@ -22,8 +22,13 @@ router.get('/:id', async function(req, res) {
         const game = await getGameById(req.params.id);
         res.send(game);
     }catch(err){
-        console.log(err);
-        res.send(500, 'Internal Server Issue, check logs');
+        if(err.error){
+            res.status(400).send(err);
+        }else{
+            console.log(err);
+            res.send(500, 'Internal Server Issue, check logs');
+        }
+
     }
 });
 //Get a Video Game By title. Not RESTful.
