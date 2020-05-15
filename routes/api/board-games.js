@@ -36,7 +36,7 @@ router.get('/:id', async function(req, res) {
     }
 });
 //Get a Board Game By title. Not completely RESTful.
-router.get('/title/:title', async function(req, res) {
+router.get('/title/:title', async function(req, res) {      //Buggy
     try{
         const gameName = req.params.title.replace(/_/g, " ");
         console.log(gameName);
